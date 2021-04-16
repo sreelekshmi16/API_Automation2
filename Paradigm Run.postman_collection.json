@@ -1,0 +1,1393 @@
+{
+	"info": {
+		"_postman_id": "724a395c-7723-45fc-836c-2eac863b0328",
+		"name": "Paradigm Run",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bidding",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"var jsonObject = xml2Json(responseBody);\r",
+									"\r",
+									"});\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);\r",
+									"//postman.setEnvironmentVariable(\"userId\", jsonData.data.userId);\r",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"Username\":\"shakeel.b@experionglobal.com\",\r\n\"Password\":\"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Token",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add_Bid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"\r",
+									"pm.test(\"New bid has been successfully created\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"New bid has been successfully created.\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"bidId\", jsonData.data.bidId);\r",
+									"\r",
+									"pm.test(\"Verify status\", function () {\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.status).to.eql(0);\r",
+									"});\r",
+									"\r",
+									"var schema = {\r",
+									"    \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"bidId\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"bidNumber\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"bidId\",\r",
+									"        \"bidNumber\"\r",
+									"      ]\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"RefNumber\":0,\"ProjectName\":\"AutomationApiCheck{{id}}\",\"ClientId\":1018,\"OverAllBidTypeId\":1,\"BidTATId\":1,\"AssignedToId\":\"a18e0f5f-22c9-4e21-99b5-c9fa8e2647be\",\"DeviceTypeId\":[1,2,3],\"Note\":\"\",\"BidPriorityId\":5,\"BidCreationType\":\"new\",\"DueOn\":\"2021-04-05T12:24:00Z\",\"RequestReceived\":\"2021-04-05T10:24:00Z\",\"BidId\":0,\"ProjectTypeId\":1,\"QualitativeMethodologies\":[],\"ProjectRequirements\":[2,5],\"ServiceTypeId\":1}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/bidding",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"bidding"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add_Quota",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Quota created validation\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Quota has been added successfully.\");\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"quotaId\", jsonData.data);\r",
+									"\r",
+									"pm.test(\"Verify status\", function () {\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.status).to.eql(0);\r",
+									"});\r",
+									"//postman.setEnvironmentVariable(\"Quota-Name\",TestQuota{{Number}});\r",
+									"\r",
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"\r",
+									"var schema ={\r",
+									"    \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Name\":\"TestQuota{{Number}}\",\"CountryId\":3,\"LanguageId\":1,\"Ir\":\"5\",\"Loi\":\"10\",\"ReqN\":\"100\",\"isNewRequired\":null,\"BidId\":{{bidId}},\"IsActive\":true}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/quota",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"quota"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_BidQuotaId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"bidQuotaId\", jsonData.quotaList[0].quotaId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/api/quota/QuotaList?BidId={{bidId}}",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"quota",
+								"QuotaList"
+							],
+							"query": [
+								{
+									"key": "BidId",
+									"value": "{{bidId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add_Qualification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Qualification created validation\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Qualification has been added successfully.\");\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.test(\"Verify status\", function () {\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.status).to.eql(0);\r",
+									"});\r",
+									"\r",
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"\r",
+									"var schema ={\r",
+									"    \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"BidQuotaId\":{{bidQuotaId}},\"DataPointGroup\":[{\"DataPointGroupId\":1,\"SubGroup\":[{\"DataPointSubGroupId\":1,\"DataPoint\":[{\"DataPointId\":81,\"DataPointTypeId\":3,\"Id\":0,\"Value\":\"\",\"DataPointOptionId\":[1836]}]}]}]}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/qualification",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"qualification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add_Vendors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Vendor created validation\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Vendor has been saved successfully.\");\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.test(\"Verify status\", function () {\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.status).to.eql(0);\r",
+									"});\r",
+									"\r",
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"var schema ={\r",
+									"    \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"BidQuotaId\":{{bidQuotaId}},\"BidOtherServiceId\":0,\"VendorIdList\":[1010]}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/vendor/quotavendormap",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"vendor",
+								"quotavendormap"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add_Quote",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var random = Math.random().toString(32).substring(2);\r",
+									"\r",
+									"pm.environment.set(\"comment\", random);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Quotation created validation\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"The quotation has been created successfully.\");\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"quoteId\", jsonData.data);\r",
+									"\r",
+									"pm.test(\"Verify status\", function () {\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.status).to.eql(0);\r",
+									"});\r",
+									"\r",
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"var schema ={\r",
+									"    \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"BidId\":{{bidId}},\"Margin\":30,\"Comments\":\"test{{comment}}\"}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/quote/create",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"quote",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit_Quote",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Quote updated validation\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"The quotation has been updated successfully\");\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.test(\"Verify status\", function () {\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.status).to.eql(0);\r",
+									"});\r",
+									"\r",
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"\r",
+									"var schema ={\r",
+									"    \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"quotationId\":{{quoteId}},\"updateof\":\"quotation\",\"updateField\":\"margin\",\"updateId\":593,\"updateValue\":\"40\"}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/quote/update",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"quote",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change_QuoteStatus_shared",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Change Quote status validation\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Quote Status updated successfully.\");\r",
+									"});\r",
+									"pm.test(\"Verify status\", function () {\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.status).to.eql(0);\r",
+									"});\r",
+									"\r",
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"\r",
+									"var schema ={\r",
+									"     \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"QuoteStatusId\":2,\"QuoteId\":{{quoteId}}}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/quote/changequotestatus",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"quote",
+								"changequotestatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change_QuoteStatus_Approved",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Change Quote status validation\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Quote Status updated successfully.\");\r",
+									"});\r",
+									"pm.test(\"Verify status\", function () {\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.status).to.eql(0);\r",
+									"});\r",
+									"\r",
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"\r",
+									"var schema ={\r",
+									"     \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"QuoteStatusId\":3,\"QuoteId\":{{quoteId}}}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/quote/changequotestatus",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"quote",
+								"changequotestatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_quotationQuotaId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"quotationQuotaId\", jsonData.data.approvedQuotationQuota[0].quotationQuotaId);\r",
+									"postman.setEnvironmentVariable(\"quotaName\", jsonData.data.approvedQuotationQuota[0].quotaName);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/api/quote/won?id={{quoteId}}",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"quote",
+								"won"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{quoteId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Won_Quote",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Won Quote  validation\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Quotation has been won successfully.\");\r",
+									"});\r",
+									"eval(pm.environment.get(\"commonTest\"))();\r",
+									"\r",
+									"var schema ={\r",
+									"    \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"data\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        },\r",
+									"        \"message\": {\r",
+									"          \"type\": \"null\"\r",
+									"        },\r",
+									"        \"status\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"data\",\r",
+									"        \"message\",\r",
+									"        \"status\"\r",
+									"      ]\r",
+									"    },\r",
+									"    \"message\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"status\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"message\",\r",
+									"    \"status\"\r",
+									"  ]\r",
+									"}\r",
+									"pm.test(\"Schema is Valid\", () =>{\r",
+									"pm.response.to.have.jsonSchema(schema);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "https://digweb-qa.azurewebsites.net"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "cross-site"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Referer",
+								"value": "https://digweb-qa.azurewebsites.net/"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							},
+							{
+								"key": "refreshToken",
+								"value": "{{refreshToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"bidId\":{{bidId}},\"quotationId\":{{quoteId}},\"wonBidId\":0,\"pmTeamId\":13,\"wonDate\":\"2021-04-08T06:29:37Z\",\"totalRevenue\":500,\"approvedQuotationQuota\":[{\"bidQuotaId\":{{bidQuotaId}},\"wonQuotaId\":0,\"country\":\"Canada\",\"quotaName\":\"{{quotaName}}\",\"cpi\":\"5\",\"reqN\":\"100\",\"revenue\":500,\"quotationQuotaId\":{{quotationQuotaId}},\"currencySymbol\":\"$\",\"hasWon\":true}],\"approvedQuotationOtherService\":[],\"currencySymbol\":\"$\"}"
+						},
+						"url": {
+							"raw": "{{Host}}/api/quote/won",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"quote",
+								"won"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"var commonTest = () => {pm.test(\"Status code is 200\", function () {",
+					"pm.response.to.have.status(200);",
+					"});",
+					"pm.test(\"Response time is less than 2500ms\", function () {",
+					"pm.expect(pm.response.responseTime).to.be.below(2500);",
+					"});",
+					"}",
+					"pm.environment.set(\"commonTest\", commonTest.toString());"
+				]
+			}
+		}
+	]
+}
